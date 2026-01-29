@@ -10,20 +10,20 @@ Set these variables before running commands (or replace directly in commands):
 
 ```bash
 # Azure Search Service
-SEARCH_SERVICE_NAME="aisearchsrp3"
-RESOURCE_GROUP="ai3"
+SEARCH_SERVICE_NAME="<<search service name>>"
+RESOURCE_GROUP="<<resource group name>>"
 
 # Azure OpenAI Service  
-AOAI_RESOURCE_NAME="aoaisrpsrchsrp3"
+AOAI_RESOURCE_NAME="<<azure open ai resource name>>"
 
 # Azure Subscription
-SUBSCRIPTION_ID="f549d128-3c63-47d6-be7c-6b0d35eb33cd"
+SUBSCRIPTION_ID="<<subscription id>>"
 
 # Optional: User-Assigned Identity Name
-USER_IDENTITY_NAME="search-aoai-identity"
+USER_IDENTITY_NAME="user assigned identity"
 ```
 
-## Required Steps
+## Required Ste˙
 
 ### 1. Enable Managed Identity on Search Service
 
@@ -59,7 +59,7 @@ az role assignment create \
   --assignee-principal-type ServicePrincipal \
   --scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.CognitiveServices/accounts/$AOAI_RESOURCE_NAME
   --assignee-principal-type ServicePrincipal \
-  --scope /subscriptions/f549d128-3c63-47d6-be7c-6b0d35eb33cd/resourceGroups/ai3/providers/Microsoft.CognitiveServices/accounts/aoaisrpsrchsrp3
+  --scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.CognitiveServices/accounts/aoaisrpsrchsrp3
 ```
 
 **Or via Azure Portal:**
@@ -100,9 +100,9 @@ az search service update \
   --user-assigned-identities /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$USER_IDENTITY_NAME
 az search service update \
   --name aisearchsrp3 \
-  --resource-group ai3 \
+  --resource-group $RESOURCE_GROUP \
   --identity-type UserAssigned \
-  --user-assigned-identities /subscriptions/<sub-id>/resourceGroups/ai3/providers/Microsoft.ManagedIdentity/userAssignedIdentities/search-aoai-identity
+  --user-assigned-identities /subscriptions/<sub-id>/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ManagedIdentity/userAssignedIdentities/search-aoai-identity
 ```
 USER_PRINCIPAL_ID=$(az identity show \
   --name $USER_IDENTITY_NAME \
@@ -125,7 +125,7 @@ az role assignment create \
 ```json
 "authIdentity": {
   "@odata.type": "#Microsoft.Azure.Search.DataUserAssignedIdentity",
-  "userAssignedIdentity": "/subscriptions/f549d128-3c63-47d6-be7c-6b0d35eb33cd/resourceGroups/ai3/providers/Microsoft.ManagedIdentity/userAssignedIdentities/search-aoai-identity"
+  "userAssignedIdentity": "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ManagedIdentity/userAssignedIdentities/search-aoai-identity"
 }
 ```
 
@@ -133,14 +133,14 @@ az role assignment create \
 ```json
 "authIdentity": {
   "@odata.type": "#Microsoft.Azure.Search.DataUserAssignedIdentity",
-  "userAssignedIdentity": "/subscriptions/f549d128-3c63-47d6-be7c-6b0d35eb33cd
+  "userAssignedIdentity": "/subscriptions/$SUBSCRIPTION_ID
 ```
 
 **In index vectorizer:**
 ```json
 "authIdentity": {
   "@odata.type": "#Microsoft.Azure.Search.DataUserAssignedIdentity",
-  "userAssignedIdentity": "/subscriptions/<sub-id>/resourceGroups/ai3/providers/Microsoft.ManagedIdentity/userAssignedIdentities/search-aoai-identity"
+  "userAssignedIdentity": "/subscriptions/<sub-id>/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ManagedIdentity/userAssignedIdentities/search-aoai-identity"
 }
 ```
 
@@ -165,7 +165,7 @@ az role assignment list \
 ```bash
 az role assignment list \
   --assignee <principal-id> \
-  --scope /subscriptions/<subscription-id>/resourceGroups/ai3/providers/Microsoft.CognitiveServices/accounts/aoaisrpsrchsrp3
+  --scope /subscriptions/<subscription-id>/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.CognitiveServices/accounts/aoaisrpsrchsrp3
 ```
 
 ## Benefits of Managed Identity
