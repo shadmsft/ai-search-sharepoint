@@ -1,0 +1,52 @@
+# Hybrid Search Query (Keyword + Vector + Filter by Department)
+POST https://{{searchServiceName}}.search.windows.net/indexes/sp-vector-index/docs/search?api-version={{searchApiVersion}}
+api-key: {{searchAdminKey}}
+Content-Type: application/json
+
+{
+  "search": "employee benefits policy",
+  "vectorQueries": [
+    {
+      "kind": "text",
+      "text": "employee benefits policy",
+      "fields": "content_vector",
+      "k": 5
+    }
+  ],
+  "filter": "DepartmentName eq 'Human Resources'",
+  "select": "title, metadata_spo_path, content, DepartmentName",
+  "top": 10
+}
+
+###
+
+# Vector-only Search
+POST https://{{searchServiceName}}.search.windows.net/indexes/sp-vector-index/docs/search?api-version={{searchApiVersion}}
+api-key: {{searchAdminKey}}
+Content-Type: application/json
+
+{
+  "vectorQueries": [
+    {
+      "kind": "text",
+      "text": "what are the vacation days allowed?",
+      "fields": "content_vector",
+      "k": 10
+    }
+  ],
+  "select": "title, metadata_spo_path, content, DepartmentName",
+  "top": 5
+}
+
+###
+
+# List all departments (faceted search)
+POST https://{{searchServiceName}}.search.windows.net/indexes/sp-vector-index/docs/search?api-version={{searchApiVersion}}
+api-key: {{searchAdminKey}}
+Content-Type: application/json
+
+{
+  "search": "*",
+  "facets": ["DepartmentName"],
+  "top": 0
+}

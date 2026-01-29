@@ -1,0 +1,57 @@
+# Index with vector field + vectorizer for query-time encoding
+PUT https://{{searchServiceName}}.search.windows.net/indexes/sp-vector-index?api-version={{searchApiVersion}}
+api-key: {{searchAdminKey}}
+Content-Type: application/json
+
+{
+  "name": "sp-vector-index",
+  "fields": [
+    { "name": "metadata_spo_site_library_item_id", "type": "Edm.String", "key": true, "filterable": false },
+    { "name": "title", "type": "Edm.String", "searchable": true, "retrievable": true, "filterable": true },
+    { "name": "metadata_spo_item_name", "type": "Edm.String", "key": false, "searchable": true, "filterable": false, "sortable": false, "facetable": false },
+    { "name": "metadata_spo_item_path", "type": "Edm.String", "key": false, "searchable": false, "filterable": false, "sortable": false, "facetable": false },
+    { "name": "metadata_spo_item_content_type", "type": "Edm.String", "key": false, "searchable": false, "filterable": true, "sortable": false, "facetable": true },
+    { "name": "metadata_spo_item_last_modified", "type": "Edm.DateTimeOffset", "key": false, "searchable": false, "filterable": false, "sortable": true, "facetable": false },
+    { "name": "metadata_spo_item_size", "type": "Edm.Int64", "key": false, "searchable": false, "filterable": false, "sortable": false, "facetable": false },
+    { "name": "metadata_spo_path", "type": "Edm.String", "searchable": false, "retrievable": true, "filterable": true },
+    { "name": "content", "type": "Edm.String", "searchable": true, "retrievable": true },
+    { "name": "DepartmentName", "type": "Edm.String", "searchable": true, "filterable": true, "sortable": true, "facetable": true },
+    {
+      "name": "content_vector",
+      "type": "Collection(Edm.Single)",
+      "searchable": true,
+      "retrievable": false,
+      "stored": false,
+      "dimensions": 3072,
+      "vectorSearchProfile": "default-vector-profile"
+    }
+  ],
+  "vectorSearch": {
+    "algorithms": [
+      {
+        "name": "hnsw-ivf",
+        "kind": "hnsw",
+        "hnswParameters": { "m": 10, "efConstruction": 400, "efSearch": 100 }
+      }
+    ],
+    "vectorizers": [
+      {
+        "name": "aoai-vectorizer",
+        "kind": "azureOpenAI",
+        "azureOpenAIParameters": {
+          "resourceUri": "https://aoaisrpsrchsrp3.openai.azure.com",
+          "deploymentId": "text-embedding-3-large",
+          "modelName": "text-embedding-3-large",
+          "authIdentity": null
+        }
+      }
+    ],
+    "profiles": [
+      {
+        "name": "default-vector-profile",
+        "algorithm": "hnsw-ivf",
+        "vectorizer": "aoai-vectorizer"
+      }
+    ]
+  }
+}

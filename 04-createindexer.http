@@ -1,0 +1,50 @@
+# Indexer tying everything together
+PUT https://{{searchServiceName}}.search.windows.net/indexers/sp-sharepoint-indexer?api-version={{searchApiVersion}}
+api-key: {{searchAdminKey}}
+Content-Type: application/json
+
+{
+    "name" : "sp-sharepoint-indexer",
+    "dataSourceName" : "sp-docs-ds",
+    "targetIndexName" : "sp-vector-index",
+    "skillsetName" : "sp-vector-skillset",
+    "parameters": {
+    "batchSize": 10,
+    "maxFailedItems": -1,
+    "maxFailedItemsPerBatch": -1,
+    "configuration": {
+        "dataToExtract": "contentAndMetadata",
+        "imageAction": "generateNormalizedImages",
+        "failOnUnsupportedContentType": false,
+        "failOnUnprocessableDocument": false
+      }
+    },
+    "schedule" : { },
+    "fieldMappings" : [
+        { 
+          "sourceFieldName" : "metadata_spo_site_library_item_id", 
+          "targetFieldName" : "metadata_spo_site_library_item_id", 
+          "mappingFunction" : { 
+            "name" : "base64Encode" 
+          }
+        },
+        {
+          "sourceFieldName" : "DepartmentName", 
+          "targetFieldName" : "DepartmentName"
+        },
+        {
+          "sourceFieldName" : "metadata_spo_item_name",
+          "targetFieldName" : "title"
+        }
+    ],
+    "outputFieldMappings" : [
+        {
+          "sourceFieldName": "/document/merged_content",
+          "targetFieldName": "content"
+        },
+        {
+          "sourceFieldName": "/document/content_vector",
+          "targetFieldName": "content_vector"
+        }
+    ]
+}

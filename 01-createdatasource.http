@@ -1,0 +1,16 @@
+# Data source (SharePoint document library)
+PUT https://{{searchServiceName}}.search.windows.net/datasources/sp-docs-ds?api-version={{searchApiVersion}}
+api-key: {{searchAdminKey}}
+Content-Type: application/json
+
+{
+  "name": "sp-docs-ds",
+  "type": "sharepoint",
+  "credentials": {
+    "connectionString": "SharePointOnlineEndpoint={{sharepointEndpoint}};ApplicationId={{appId}};ApplicationSecret={{appSecret}};TenantId={{tenantId}}"
+  },
+  "container": {
+    "name": "useQuery",
+    "query": "includeLibrary={{sharepointLibraryUrl}};additionalColumns=DepartmentName"
+  }
+}

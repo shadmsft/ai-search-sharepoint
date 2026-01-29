@@ -1,0 +1,55 @@
+# Skillset (chunk + Azure OpenAI embedding)
+PUT https://{{searchServiceName}}.search.windows.net/skillsets/sp-vector-skillset?api-version={{searchApiVersion}}
+api-key: {{searchAdminKey}}
+Content-Type: application/json
+
+{
+  "name": "sp-vector-skillset",
+  "skills": [
+    {
+      "@odata.type": "#Microsoft.Skills.Vision.OcrSkill",
+      "name": "#ocr",
+      "description": "Extract text from scanned PDFs and images",
+      "context": "/document/normalized_images/*",
+      "defaultLanguageCode": "en",
+      "detectOrientation": true,
+      "inputs": [
+        { "name": "image", "source": "/document/normalized_images/*" }
+      ],
+      "outputs": [
+        { "name": "text", "targetName": "text" }
+      ]
+    },
+    {
+      "@odata.type": "#Microsoft.Skills.Text.MergeSkill",
+      "name": "#merge",
+      "description": "Merge OCR text with extracted content",
+      "context": "/document",
+      "insertPreTag": " ",
+      "insertPostTag": " ",
+      "inputs": [
+        { "name": "text", "source": "/document/content" },
+        { "name": "itemsToInsert", "source": "/document/normalized_images/*/text" }
+      ],
+      "outputs": [
+        { "name": "mergedText", "targetName": "merged_content" }
+      ]
+    },
+    {
+      "@odata.type": "#Microsoft.Skills.Text.AzureOpenAIEmbeddingSkill",
+      "name": "#embed-content",
+      "description": "Generate embeddings for merged document content",
+      "context": "/document",
+      "resourceUri": "{{aoaiEndpoint}}/",
+      "deploymentId": "{{aoaiDeploymentId}}",
+      "modelName": "{{aoaiModelName}}",
+      "authIdentity": null,
+      "inputs": [
+        { "name": "text", "source": "/document/merged_content" }
+      ],
+      "outputs": [
+        { "name": "embedding", "targetName": "content_vector" }
+      ]
+    }
+  ]
+}

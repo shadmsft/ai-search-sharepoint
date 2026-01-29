@@ -1,0 +1,7 @@
+# Sensitive configuration files
+http-client.private.env.json
+config.txt
+
+# API keys and secrets
+*.key
+*.secret
