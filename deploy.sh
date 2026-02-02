@@ -62,8 +62,8 @@ DEPLOYMENT_NAME="ai-search-sp-$(date +%Y%m%d-%H%M%S)"
 az deployment group create \
     --name "$DEPLOYMENT_NAME" \
     --resource-group "$RESOURCE_GROUP" \
-    --template-file infra/main.bicep \
-    --parameters infra/main.bicepparam \
+    --template-file main.bicep \
+    --parameters main.bicepparam \
     --output json > deployment-output.json
 
 if [ $? -eq 0 ]; then
