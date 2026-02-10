@@ -42,7 +42,7 @@ Content-Type: application/json
           "resourceUri": "https://aoaisrpsrchsrp3.openai.azure.com",
           "deploymentId": "text-embedding-3-large",
           "modelName": "text-embedding-3-large",
-          "authIdentity": null
+          "apiKey": "{{aoaiApiKey}}"
         }
       }
     ],
@@ -51,6 +51,28 @@ Content-Type: application/json
         "name": "default-vector-profile",
         "algorithm": "hnsw-ivf",
         "vectorizer": "aoai-vectorizer"
+      }
+    ]
+  },
+  "semantic": {
+    "configurations": [
+      {
+        "name": "default",
+        "prioritizedFields": {
+          "titleField": {
+            "fieldName": "title"
+          },
+          "prioritizedContentFields": [
+            {
+              "fieldName": "content"
+            }
+          ],
+          "prioritizedKeywordsFields": [
+            {
+              "fieldName": "DepartmentName"
+            }
+          ]
+        }
       }
     ]
   }

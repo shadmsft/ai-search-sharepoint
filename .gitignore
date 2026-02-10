@@ -1,5 +1,6 @@
 # Sensitive configuration files
 http-client.private.env.json
+http-client.private.env copy.json
 config.txt
 
 # API keys and secrets

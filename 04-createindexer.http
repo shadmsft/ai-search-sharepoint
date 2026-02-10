@@ -43,7 +43,7 @@ Content-Type: application/json
           "targetFieldName": "content"
         },
         {
-          "sourceFieldName": "/document/content_vector",
+          "sourceFieldName": "/document/pages/*/vector",
           "targetFieldName": "content_vector"
         }
     ]

@@ -199,12 +199,12 @@ Index with DepartmentName field
 
 Execute the HTTP files in order:
 
-1. **[00-setup-managed-identity.md](00-setup-managed-identity.md))** - Follow these steps to setup the identity and permissions. 
+1. **[00-setup-managed-identity.md](00-setup-managed-identity.md)** - Follow these steps to setup the identity and permissions. 
 1. **[01-createdatasource.http](01-createdatasource.http)** - Creates SharePoint data source with DepartmentName column
-2. **[02-createskillset.http](02-createskillset.http)** - Creates OCR + chunking + embedding skillset
-3. **[03-createindex.http](03-createindex.http)** - Creates index with vector field and DepartmentName
-4. **[04-createindexer.http](04-createindexer.http)** - Creates and runs the indexer
-5. **[05-query-hybrid.http](05-query-hybrid.http)** - Query examples (hybrid search, filtering by department)
+1. **[02-createskillset.http](02-createskillset.http)** - Creates OCR + chunking + embedding skillset
+1. **[03-createindex.http](03-createindex.http)** - Creates index with vector field and DepartmentName
+1. **[04-createindexer.http](04-createindexer.http)** - Creates and runs the indexer
+1. **[05-query-hybrid.http](05-query-hybrid.http)** - Query examples (hybrid search, filtering by department)
 
 ## Important Configuration Details
 
@@ -632,7 +632,47 @@ For even better search quality, consider enabling semantic ranking:
 7. ⏭️ Optimize chunk size based on your document structure
 
 ## References
+
+### Azure AI Search Core Documentation
+- [Azure AI Search Documentation](https://learn.microsoft.com/en-us/azure/search/)
 - [SharePoint indexer documentation](https://learn.microsoft.com/en-us/azure/search/search-how-to-index-sharepoint-online)
 - [Integrated vectorization](https://learn.microsoft.com/en-us/azure/search/search-how-to-integrated-vectorization)
+- [Create a search index](https://learn.microsoft.com/en-us/azure/search/search-what-is-an-index)
+- [Create an indexer](https://learn.microsoft.com/en-us/azure/search/search-indexer-overview)
+
+### AI Skills & Cognitive Services
 - [OCR skill](https://learn.microsoft.com/en-us/azure/search/cognitive-search-skill-ocr)
 - [Azure OpenAI embedding skill](https://learn.microsoft.com/en-us/azure/search/cognitive-search-skill-azure-openai-embedding)
+- [Text merge skill](https://learn.microsoft.com/en-us/azure/search/cognitive-search-skill-textmerger)
+- [Text split skill](https://learn.microsoft.com/en-us/azure/search/cognitive-search-skill-textsplit)
+- [Built-in skills overview](https://learn.microsoft.com/en-us/azure/search/cognitive-search-predefined-skills)
+
+### Vector Search & Embeddings
+- [Vector search in Azure AI Search](https://learn.microsoft.com/en-us/azure/search/vector-search-overview)
+- [Azure OpenAI embeddings](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/understand-embeddings)
+- [HNSW algorithm in Azure AI Search](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking)
+- [Integrated vectorization documentation](https://learn.microsoft.com/en-us/azure/search/vector-search-integrated-vectorization)
+
+### Security & Authentication
+- [Managed identities for Azure AI Search](https://learn.microsoft.com/en-us/azure/search/search-howto-managed-identities-data-sources)
+- [Azure RBAC for Azure AI Search](https://learn.microsoft.com/en-us/azure/search/search-security-rbac)
+- [Register an app in Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app)
+- [SharePoint API permissions](https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/add-in-permissions-in-sharepoint)
+
+### Hybrid & Semantic Search
+- [Hybrid search in Azure AI Search](https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview)
+- [Semantic ranking](https://learn.microsoft.com/en-us/azure/search/semantic-search-overview)
+- [Reciprocal Rank Fusion (RRF)](https://learn.microsoft.com/en-us/azure/search/hybrid-search-ranking)
+
+### REST API Reference
+- [Azure AI Search REST API](https://learn.microsoft.com/en-us/rest/api/searchservice/)
+- [Create Data Source (REST API)](https://learn.microsoft.com/en-us/rest/api/searchservice/create-data-source)
+- [Create Skillset (REST API)](https://learn.microsoft.com/en-us/rest/api/searchservice/create-skillset)
+- [Create Index (REST API)](https://learn.microsoft.com/en-us/rest/api/searchservice/create-index)
+- [Create Indexer (REST API)](https://learn.microsoft.com/en-us/rest/api/searchservice/create-indexer)
+
+### Additional Resources
+- [Azure AI Search pricing](https://azure.microsoft.com/en-us/pricing/details/search/)
+- [Azure OpenAI Service quotas and limits](https://learn.microsoft.com/en-us/azure/ai-services/openai/quotas-limits)
+- [Best practices for Azure AI Search](https://learn.microsoft.com/en-us/azure/search/search-performance-tips)
+- [Troubleshooting Azure AI Search indexers](https://learn.microsoft.com/en-us/azure/search/search-indexer-troubleshooting)

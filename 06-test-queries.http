@@ -1,101 +1,52 @@
-# Test Query 1: Get all documents to see DepartmentName values
+# Hybrid Search Query (Keyword + Vector + Filter by Department)
 POST https://{{searchServiceName}}.search.windows.net/indexes/sp-vector-index/docs/search?api-version={{searchApiVersion}}
 api-key: {{searchAdminKey}}
 Content-Type: application/json
 
 {
-  "search": "*",
-  "select": "metadata_spo_item_name, DepartmentName, metadata_spo_path",
-  "top": 50
-}
-
-###
-
-# Test Query 2: Get facets to see actual DepartmentName values
-POST https://{{searchServiceName}}.search.windows.net/indexes/sp-vector-index/docs/search?api-version={{searchApiVersion}}
-api-key: {{searchAdminKey}}
-Content-Type: application/json
-
-{
-  "search": "*",
-  "facets": ["DepartmentName,count:100"],
-  "top": 0
-}
-
-###
-
-# Test Query 3: Filter by DepartmentName (use actual value from facets above)
-POST https://{{searchServiceName}}.search.windows.net/indexes/sp-vector-index/docs/search?api-version={{searchApiVersion}}
-api-key: {{searchAdminKey}}
-Content-Type: application/json
-
-{
-  "search": "*",
-  "filter": "DepartmentName eq 'Finance'",
-  "select": "metadata_spo_item_name, DepartmentName, metadata_spo_path",
-  "top": 50
-}
-
-###
-
-# Test Query 4: Filter for documents where DepartmentName is NOT null
-POST https://{{searchServiceName}}.search.windows.net/indexes/sp-vector-index/docs/search?api-version={{searchApiVersion}}
-api-key: {{searchAdminKey}}
-Content-Type: application/json
-
-{
-  "search": "*",
-  "filter": "DepartmentName ne null",
-  "select": "metadata_spo_item_name, DepartmentName, metadata_spo_path",
-  "top": 50
-}
-
-###
-
-# Test Query 5: Filter for documents where DepartmentName IS null
-POST https://{{searchServiceName}}.search.windows.net/indexes/sp-vector-index/docs/search?api-version={{searchApiVersion}}
-api-key: {{searchAdminKey}}
-Content-Type: application/json
-
-{
-  "search": "*",
-  "filter": "DepartmentName eq null",
-  "select": "metadata_spo_item_name, DepartmentName, metadata_spo_path",
-  "top": 50
-}
-
-###
-
-# Test Query 6: Hybrid search with filter
-POST https://{{searchServiceName}}.search.windows.net/indexes/sp-vector-index/docs/search?api-version={{searchApiVersion}}
-api-key: {{searchAdminKey}}
-Content-Type: application/json
-
-{
-  "search": "policy",
+  "search": "employee benefits policy",
   "vectorQueries": [
     {
       "kind": "text",
-      "text": "policy documents",
+      "text": "employee benefits policy",
       "fields": "content_vector",
-      "k": 10
+      "k": 5
     }
   ],
-  "filter": "DepartmentName ne null",
-  "select": "metadata_spo_item_name, DepartmentName, content",
+  "filter": "DepartmentName eq 'Human Resources'",
+  "select": "title, metadata_spo_path, content, DepartmentName",
   "top": 10
 }
 
 ###
 
-# Test Query 7: Search within specific content type and department
+# Vector-only Search
+POST https://{{searchServiceName}}.search.windows.net/indexes/sp-vector-index/docs/search?api-version={{searchApiVersion}}
+api-key: {{searchAdminKey}}
+Content-Type: application/json
+
+{
+  "vectorQueries": [
+    {
+      "kind": "text",
+      "text": "what are the vacation days allowed?",
+      "fields": "content_vector",
+      "k": 10
+    }
+  ],
+  "select": "title, metadata_spo_path, content, DepartmentName",
+  "top": 5
+}
+
+###
+
+# List all departments (faceted search)
 POST https://{{searchServiceName}}.search.windows.net/indexes/sp-vector-index/docs/search?api-version={{searchApiVersion}}
 api-key: {{searchAdminKey}}
 Content-Type: application/json
 
 {
   "search": "*",
-  "filter": "metadata_spo_item_content_type eq 'Document' and DepartmentName ne null",
-  "select": "metadata_spo_item_name, DepartmentName, metadata_spo_item_content_type",
-  "top": 50
+  "facets": ["DepartmentName"],
+  "top": 0
 }

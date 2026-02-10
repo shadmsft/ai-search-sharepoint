@@ -5,6 +5,12 @@ Content-Type: application/json
 
 {
   "name": "sp-vector-skillset",
+  "cognitiveServices": {
+    "@odata.type": "#Microsoft.Azure.Search.AIServicesByIdentity",
+    "description": "A sample configuration for a system-assigned managed identity.",
+    "subdomainUrl": "https://<{AI Foundry Name}>.services.ai.azure.com",
+    "identity": null
+  },
   "skills": [
     {
       "@odata.type": "#Microsoft.Skills.Vision.OcrSkill",
@@ -36,19 +42,34 @@ Content-Type: application/json
       ]
     },
     {
-      "@odata.type": "#Microsoft.Skills.Text.AzureOpenAIEmbeddingSkill",
-      "name": "#embed-content",
-      "description": "Generate embeddings for merged document content",
+      "@odata.type": "#Microsoft.Skills.Text.SplitSkill",
+      "name": "#split",
+      "description": "Split merged content into chunks to avoid token limit",
       "context": "/document",
-      "resourceUri": "{{aoaiEndpoint}}/",
-      "deploymentId": "{{aoaiDeploymentId}}",
-      "modelName": "{{aoaiModelName}}",
-      "authIdentity": null,
+      "textSplitMode": "pages",
+      "maximumPageLength": 2000,
+      "pageOverlapLength": 200,
       "inputs": [
         { "name": "text", "source": "/document/merged_content" }
       ],
       "outputs": [
-        { "name": "embedding", "targetName": "content_vector" }
+        { "name": "textItems", "targetName": "pages" }
+      ]
+    },
+    {
+      "@odata.type": "#Microsoft.Skills.Text.AzureOpenAIEmbeddingSkill",
+      "name": "#embed-content",
+      "description": "Generate embeddings for each chunk",
+      "context": "/document/pages/*",
+      "resourceUri": "{{aoaiEndpoint}}",
+      "deploymentId": "{{aoaiDeploymentId}}",
+      "modelName": "{{aoaiModelName}}",
+      "apiKey": "{{aoaiApiKey}}",
+      "inputs": [
+        { "name": "text", "source": "/document/pages/*" }
+      ],
+      "outputs": [
+        { "name": "embedding", "targetName": "vector" }
       ]
     }
   ]
